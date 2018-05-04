@@ -503,29 +503,3 @@ head(score)
 # How good was the prediction?
 rxRocCurve(actualVarName = "V2", predVarNames = "Probability.1", data = score)
 
-
-
-
-## Spark
-cc <- rxSparkConnect(reset = TRUE, interop = "sparklyr",shareDir = "tmp")
-sc <- spark_connect(master = "local")
-
-mySparkCluster<-rxSpa
-rxSetComputeContext(mySparkCluster)
-
-# Create an info list for the airline data
-airlineColInfo <- list(
-  DAY_OF_WEEK = list(type = "factor"),
-  ORIGIN = list(type = "factor"),
-  DEST = list(type = "factor"),
-  DEP_TIME = list(type = "integer"),
-  ARR_DEL15 = list(type = "logical"))
-
-airOnTimeData<-RxSpark()
-
-# Specify the formula to use
-formula = "ARR_DEL15 ~ ORIGIN + DAY_OF_WEEK + DEP_TIME + DEST"
-# Build model
-modelSpark <- rxLogit(formula, data = airOnTimeData)
-# Display a summary
-summary(modelSpark)
